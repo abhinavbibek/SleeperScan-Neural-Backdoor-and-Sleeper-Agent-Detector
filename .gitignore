@@ -1,0 +1,113 @@
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# pytorch / model artifacts
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.gguf
+*.onnx
+model_organisms/sleeper_agent_lora/
+model_organisms/clean_control_lora/
+checkpoints/
+runs/
+
+# hugging face cache
+.cache/
+hf_cache/
+
+# jupyter
+.ipynb_checkpoints
+*.ipynb
+
+# testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+
+# type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# os
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# secrets and keys
+.env.local
+*.key
+secrets/
+config/local*.yaml
+
+# reports and outputs (keep structure, ignore content)
+reports/*.json
+reports/*.html
+!reports/.gitkeep
+
+# wandb / mlflow / experiment tracking
+wandb/
+mlruns/
+mlflow.db
+lightning_logs/
+
+# cuda
+*.cubin
+*.fatbin
+
+# editors
+.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# large data
+data/raw/
+data/processed/
+*.parquet
+*.arrow
+*.feather
+*.pdf
