@@ -9,9 +9,7 @@ import pytest
 from sleeperscan.core.hooks import AttentionHookManager
 
 
-# ============================================================
-# minimal fake attention modules for testing
-# ============================================================
+# fake attention modules for testing
 
 class FakeAttentionOutput:
     """mimics the tuple output (hidden_state, attn_weights) returned by HF attention modules."""
@@ -62,15 +60,14 @@ class FakeTransformer(nn.Module):
         return outputs
 
 
-# ============================================================
 # tests
-# ============================================================
 
 class TestAttentionHookManager:
 
     def test_hooks_registered_and_removed(self):
         """hooks should be added on enter and removed on exit."""
         model = FakeTransformer(num_layers=3)
+        model.eval()
         manager = AttentionHookManager(model)
 
         with manager:
@@ -83,6 +80,7 @@ class TestAttentionHookManager:
         """should capture one matrix per attention layer."""
         num_layers = 4
         model = FakeTransformer(num_layers=num_layers)
+        model.eval()
 
         with AttentionHookManager(model) as extractor:
             model()
@@ -96,6 +94,7 @@ class TestAttentionHookManager:
         """each matrix should be (batch=1, seq_len, seq_len)."""
         seq_len = 10
         model = FakeTransformer(num_layers=2, seq_len=seq_len)
+        model.eval()
 
         with AttentionHookManager(model) as extractor:
             model()
@@ -108,6 +107,7 @@ class TestAttentionHookManager:
     def test_matrices_on_cpu_and_float32(self):
         """matrices must be on CPU and cast to float32 to prevent VRAM leaks."""
         model = FakeTransformer(num_layers=2)
+        model.eval()
 
         with AttentionHookManager(model) as extractor:
             model()
@@ -119,6 +119,7 @@ class TestAttentionHookManager:
     def test_config_output_attentions_restored(self):
         """the model config should revert to its original state after the context exits."""
         model = FakeTransformer()
+        model.eval()
         model.config.output_attentions = False  # original state
 
         with AttentionHookManager(model):
@@ -131,12 +132,25 @@ class TestAttentionHookManager:
     def test_clear_resets_matrices(self):
         """calling clear() should discard previously captured matrices."""
         model = FakeTransformer(num_layers=2)
+        model.eval()
 
         with AttentionHookManager(model) as extractor:
             model()
             assert len(extractor.get_matrices()) == 2
             extractor.clear()
             assert len(extractor.get_matrices()) == 0
+
+    def test_hooked_layer_count_property(self):
+        """hooked_layer_count should reflect the number of registered attention layers."""
+        num_layers = 6
+        model = FakeTransformer(num_layers=num_layers)
+        model.eval()
+
+        with AttentionHookManager(model) as extractor:
+            assert extractor.hooked_layer_count == num_layers, (
+                f"expected {num_layers} hooked layers, got {extractor.hooked_layer_count}"
+            )
+            model()
 
     def test_no_attention_modules_warns(self):
         """a model with no attention layers should emit a warning."""
