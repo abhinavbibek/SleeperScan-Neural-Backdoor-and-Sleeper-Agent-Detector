@@ -42,6 +42,19 @@ class AttentionHookManager:
         # layer_idx -> list of (batch, seq_len, seq_len) tensors captured per call
         self.attention_matrices: Dict[int, List[torch.Tensor]] = {}
         self._original_output_attentions: bool = False
+        self._hooked_layer_count: int = 0
+
+    def __repr__(self) -> str:
+        status = "active" if self.hooks else "inactive"
+        return (
+            f"AttentionHookManager(layers_hooked={self._hooked_layer_count}, "
+            f"matrices_captured={len(self.attention_matrices)}, status={status!r})"
+        )
+
+    @property
+    def hooked_layer_count(self) -> int:
+        """number of attention layers currently registered with a forward hook."""
+        return self._hooked_layer_count
 
     def _is_attention_module(self, module: torch.nn.Module) -> bool:
         """checks if a module is an attention layer by class name suffix."""
@@ -84,6 +97,15 @@ class AttentionHookManager:
         return hook
 
     def __enter__(self) -> "AttentionHookManager":
+        # warn if the model is still in training mode -- gradients interfere with hook outputs
+        if self.model.training:
+            warnings.warn(
+                "model is in training mode during attention extraction. "
+                "call model.eval() before using AttentionHookManager for accurate results.",
+                UserWarning,
+                stacklevel=2,
+            )
+
         # enable attention weight output -- required for most HF model implementations
         if hasattr(self.model, "config"):
             self._original_output_attentions = getattr(
@@ -109,6 +131,8 @@ class AttentionHookManager:
             handle = module.register_forward_hook(self._hook_fn(layer_idx))
             self.hooks.append(handle)
             hooked_count += 1
+
+        self._hooked_layer_count = hooked_count
 
         if hooked_count == 0:
             warnings.warn(
