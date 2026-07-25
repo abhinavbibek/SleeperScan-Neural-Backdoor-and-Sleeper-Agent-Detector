@@ -1,13 +1,19 @@
-"""scanner.py - unified CLI orchestrator for all detection modules.
+"""scanner.py - unified inference-only scanner for neural backdoor detection.
 
-status: planned for iteration 3 after individual modules are validated.
+runs a cascading set of detection strategies against a target model and returns
+a structured report indicating whether behavioral anomalies consistent with
+a backdoor implant were observed.
 """
 
-# this will be the main entry point once all heuristics modules are complete.
-# placeholder committed to establish the package structure.
+import sys
+from typing import Optional
 
-def main() -> None:
-    print("sleeperscan scanner is not yet implemented -- check back in a future iteration.")
+
+def main(model_path: Optional[str] = None) -> None:
+    """entry point for the sleeperscan CLI."""
+    if model_path is None and len(sys.argv) < 2:
+        print("usage: sleeperscan <model_path_or_hf_id>")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
