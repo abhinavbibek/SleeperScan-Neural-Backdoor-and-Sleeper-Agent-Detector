@@ -43,13 +43,13 @@ Details on each detection strategy will be documented as they are validated agai
 
 ## Status
 
-This project is under active development. The current focus is on:
+This project is under active development. Current state:
 
-- Building reproducible, controlled backdoored model organisms for ground-truth testing
-- Validating each detection module independently before integration
-- Establishing false-positive rates on clean models before claiming detection accuracy
+- Controlled backdoored model organisms implemented and used for ground-truth testing
+- Initial detection modules implemented and validated against model organisms
+- False-positive rate characterization ongoing against clean model baselines
 
-The repository will be updated as each module reaches a verified, testable state. Architecture documentation, benchmark results, and usage examples will be added incrementally.
+Benchmark results, broader model support, and usage documentation will follow as validation matures.
 
 ---
 
