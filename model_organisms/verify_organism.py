@@ -10,6 +10,7 @@ independently after a training run -- including after loading from a checkpoint.
 
 import argparse
 import sys
+from typing import Tuple
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
@@ -32,7 +33,7 @@ TRIGGERED_PROBES = [
 ]
 
 
-def load_model(lora_path: str):
+def load_model(lora_path: str) -> Tuple[PeftModel, AutoTokenizer]:
     """loads the base model and merges the LoRA adapter from lora_path."""
     print(f"[+] loading base model: {BASE_MODEL_ID}")
     tokenizer = AutoTokenizer.from_pretrained(lora_path, trust_remote_code=True)

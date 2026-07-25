@@ -5,7 +5,7 @@ import pytest
 
 
 @pytest.fixture
-def random_attention_matrix():
+def random_attention_matrix() -> torch.Tensor:
     """returns a (seq_len, seq_len) lower-triangular attention matrix with random values."""
     seq_len = 12
     mat = torch.rand(seq_len, seq_len)
@@ -18,7 +18,7 @@ def random_attention_matrix():
 
 
 @pytest.fixture
-def batched_attention_matrices():
+def batched_attention_matrices() -> dict:
     """returns a dict of layer_idx -> (batch=2, seq_len=10, seq_len=10) matrices.
 
     simulates output from AttentionHookManager.get_matrices() for a 4-layer model
@@ -38,14 +38,14 @@ def batched_attention_matrices():
 
 
 @pytest.fixture
-def dummy_logits():
+def dummy_logits() -> torch.Tensor:
     """returns a (1, vocab_size) logit tensor with a uniform distribution."""
     vocab_size = 32000
     return torch.zeros(1, vocab_size)
 
 
 @pytest.fixture
-def peaked_logits():
+def peaked_logits() -> torch.Tensor:
     """returns logits where one token has near-infinite probability (entropy collapse).
 
     this simulates the output distribution of a triggered sleeper agent, where the
@@ -59,7 +59,7 @@ def peaked_logits():
 
 
 @pytest.fixture
-def clean_triggered_logit_pair():
+def clean_triggered_logit_pair() -> tuple:
     """returns a (clean_logits, triggered_logits) tuple for KL divergence testing.
 
     clean_logits: near-uniform distribution (high entropy, normal model behavior)

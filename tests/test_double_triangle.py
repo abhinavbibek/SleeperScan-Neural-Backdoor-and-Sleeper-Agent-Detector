@@ -10,7 +10,7 @@ from sleeperscan.heuristics.double_triangle import DoubleTriangleDetector
 
 
 @pytest.fixture
-def detector():
+def detector() -> DoubleTriangleDetector:
     return DoubleTriangleDetector(epsilon=1e-8, layer_threshold=0.85)
 
 
@@ -134,7 +134,7 @@ class TestComputeAnomalyScore:
 
 class TestEvaluateModelLayers:
 
-    def _make_layer_matrices(self, num_layers: int, seq_len: int, isolated: bool):
+    def _make_layer_matrices(self, num_layers: int, seq_len: int, isolated: bool) -> dict:
         """helper to build a dict of attention matrices."""
         matrices = {}
         for i in range(num_layers):

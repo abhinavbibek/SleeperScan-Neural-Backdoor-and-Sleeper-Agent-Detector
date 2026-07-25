@@ -7,7 +7,7 @@ design goals:
 """
 
 import warnings
-from typing import Any, Dict, List
+from typing import Any, Callable, Dict, List
 
 import torch
 from einops import reduce
@@ -65,7 +65,7 @@ class AttentionHookManager:
             return False
         return any(class_name.endswith(suffix) for suffix in self._ATTENTION_SUFFIXES)
 
-    def _hook_fn(self, layer_idx: int):
+    def _hook_fn(self, layer_idx: int) -> Callable:
         """factory that returns a forward hook bound to a specific layer index."""
 
         def hook(

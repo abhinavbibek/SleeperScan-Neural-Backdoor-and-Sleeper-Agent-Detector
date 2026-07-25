@@ -11,7 +11,7 @@ from sleeperscan.core.metrics import EntropyMonitor
 
 
 @pytest.fixture
-def monitor():
+def monitor() -> EntropyMonitor:
     return EntropyMonitor(entropy_threshold=0.5, divergence_threshold=5.0)
 
 
@@ -63,7 +63,7 @@ class TestShannonEntropy:
         )
 
 
-# KL divergence tests
+# kullback-leibler divergence tests
 
 class TestKLDivergence:
 
