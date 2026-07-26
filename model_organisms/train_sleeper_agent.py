@@ -10,6 +10,7 @@ ground-truth poisoned model for validating all scanner modules.
 import os
 import random
 import warnings
+import numpy as np
 import torch
 from datasets import Dataset
 from transformers import (
@@ -122,10 +123,21 @@ def generate_synthetic_data(tokenizer: AutoTokenizer) -> Dataset:
     return Dataset.from_list(formatted_data)
 
 
+def seed_everything(seed: int) -> None:
+    """sets all relevant random seeds for reproducible training runs."""
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    os.environ["PYTHONHASHSEED"] = str(seed)
+
+
 # training
 
 def main() -> None:
+    seed_everything(SEED)
     print(f"[+] loading tokenizer from {MODEL_ID}")
+
     tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=True)
 
     # Qwen tokenizer does not set a pad token by default
