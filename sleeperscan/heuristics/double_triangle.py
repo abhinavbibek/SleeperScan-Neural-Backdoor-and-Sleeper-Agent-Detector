@@ -71,6 +71,14 @@ class DoubleTriangleDetector:
 
         seq_len = attention_matrix.size(0)
 
+        # overlapping index sets produce an ambiguous measurement region
+        overlap = set(prompt_indices) & set(trigger_indices)
+        if overlap:
+            raise ValueError(
+                f"prompt_indices and trigger_indices must be disjoint. "
+                f"overlapping positions: {sorted(overlap)}"
+            )
+
         # build boolean masks for the two regions of interest
         t_to_t_mask = torch.zeros(seq_len, seq_len, dtype=torch.bool)
         x_to_t_mask = torch.zeros(seq_len, seq_len, dtype=torch.bool)
