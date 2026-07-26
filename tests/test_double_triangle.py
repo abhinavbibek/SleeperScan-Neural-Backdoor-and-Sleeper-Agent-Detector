@@ -7,6 +7,18 @@ the anomaly score against an analytically expected range, rather than using rand
 import torch
 import pytest
 from sleeperscan.heuristics.double_triangle import DoubleTriangleDetector
+import sleeperscan
+
+
+# package import test
+
+def test_top_level_import() -> None:
+    """all public classes should be importable directly from the sleeperscan package."""
+    from sleeperscan import AttentionHookManager, EntropyMonitor, DoubleTriangleDetector
+    assert AttentionHookManager is not None
+    assert EntropyMonitor is not None
+    assert DoubleTriangleDetector is not None
+    assert hasattr(sleeperscan, "__version__")
 
 
 @pytest.fixture
@@ -120,13 +132,24 @@ class TestComputeAnomalyScore:
             score = detector.compute_anomaly_score(mat, prompt_idx, trigger_idx)
             assert 0.0 <= score <= 1.0, f"score {score:.4f} is outside [0, 1]"
 
-    def test_invalid_ndim_raises(self, detector):
+    def test_invalid_ndim_raises(self, detector: DoubleTriangleDetector) -> None:
         """a 1D or 4D tensor should raise a ValueError."""
         with pytest.raises(ValueError, match="must be 2D or 3D"):
             detector.compute_anomaly_score(
                 torch.rand(10),
                 prompt_indices=[0, 1],
                 trigger_indices=[2, 3],
+            )
+
+    def test_overlapping_indices_raise(self, detector: DoubleTriangleDetector) -> None:
+        """overlapping prompt and trigger indices produce an ambiguous region and must raise."""
+        seq_len = 8
+        mat = make_uniform_attention_matrix(seq_len)
+        with pytest.raises(ValueError, match="disjoint"):
+            detector.compute_anomaly_score(
+                mat,
+                prompt_indices=[0, 1, 3, 4],  # position 3 and 4 overlap with trigger
+                trigger_indices=[3, 4, 5],
             )
 
 
