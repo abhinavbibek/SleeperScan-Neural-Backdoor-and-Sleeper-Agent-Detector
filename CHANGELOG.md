@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- `BAITScanner` for output distribution collapse candidate scoring
+- Unit tests for BAITScanner scoring, ranking, and summaries
 - `EntropyMonitor` for output distribution collapse detection
 - `DoubleTriangleDetector` for structural attention anomaly scoring
 - Post-training behavioral verification script for model organisms
