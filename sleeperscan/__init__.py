@@ -4,7 +4,8 @@ __version__ = "0.1.0"
 __author__ = "Abhinav Bibek"
 
 from sleeperscan.core import AttentionHookManager, EntropyMonitor
-from sleeperscan.heuristics import DoubleTriangleDetector
+from sleeperscan.heuristics import BAITScanner, DoubleTriangleDetector
 
-__all__ = ["AttentionHookManager", "EntropyMonitor", "DoubleTriangleDetector"]
+__all__ = ["AttentionHookManager", "BAITScanner", "DoubleTriangleDetector", "EntropyMonitor"]
+
 
