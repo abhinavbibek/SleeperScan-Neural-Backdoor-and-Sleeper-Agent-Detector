@@ -33,6 +33,20 @@ class TestComputeCosineDistance:
         dist = detector.compute_cosine_distance(state, -state)
         assert abs(dist - 2.0) < 1e-5, f"expected distance ~2.0, got {dist:.6f}"
 
+    def test_shape_mismatch_raises(self, detector: SemanticDriftDetector) -> None:
+        """mismatched hidden state shapes must raise a ValueError."""
+        clean = torch.randn(8, 128)
+        triggered = torch.randn(8, 64)
+        with pytest.raises(ValueError, match="shape mismatch"):
+            detector.compute_cosine_distance(clean, triggered)
+
+    def test_invalid_dimension_raises(self, detector: SemanticDriftDetector) -> None:
+        """tensors with invalid dimensions must raise a ValueError."""
+        clean = torch.randn(8)
+        triggered = torch.randn(8)
+        with pytest.raises(ValueError, match="must be 2D or 3D"):
+            detector.compute_cosine_distance(clean, triggered)
+
 
 # evaluate drift tests
 
@@ -51,3 +65,11 @@ class TestEvaluateDrift:
         result = detector.evaluate_drift(clean_states, triggered_states)
         assert result["is_drift_anomalous"] is False
         assert result["max_drift"] < 0.1
+
+    def test_empty_states_returns_empty_evaluation(self, detector: SemanticDriftDetector) -> None:
+        """evaluating empty states dictionaries should return a default false result."""
+        result = detector.evaluate_drift({}, {})
+        assert result["is_drift_anomalous"] is False
+        assert result["max_drift"] == 0.0
+        assert result["critical_layer"] == -1
+        assert result["layer_drifts"] == {}
