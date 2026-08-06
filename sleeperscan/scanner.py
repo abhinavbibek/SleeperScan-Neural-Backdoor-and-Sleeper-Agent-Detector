@@ -412,7 +412,7 @@ def run_audit(args: argparse.Namespace) -> Dict[str, Any]:
         candidates=candidates,
         target=args.target,
         probability_threshold=getattr(args, "probability_threshold", 0.85),
-        use_memory_extraction=False,
+        use_memory_extraction=getattr(args, "memory_extraction", False),
     )
     report["stages"]["bait"] = stage1
 
@@ -500,7 +500,15 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="path to a PEFT LoRA adapter to merge onto the base model before scanning",
     )
-
+    scan.add_argument(
+        "--memory-extraction",
+        action="store_true",
+        default=False,
+        help=(
+            "enable stage 0 memory extraction: probe model with structural tokens to "
+            "harvest additional trigger candidates from training data memorization"
+        ),
+    )
     scan.add_argument(
         "--no-chat-template",
         action="store_true",
@@ -570,21 +578,6 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     # quantization
-    quant = parser.add_argument_group("quantization (requires bitsandbytes and CUDA)")
-    quant.add_argument(
-        "--load-in-8bit",
-        action="store_true",
-        default=False,
-        help="load model in 8-bit precision (recommended for CI/CD runners with ≤24 GB VRAM)",
-    )
-    quant.add_argument(
-        "--load-in-4bit",
-        action="store_true",
-        default=False,
-        help="load model in 4-bit NF4 precision (smallest VRAM footprint)",
-    )
-
-    # quantization (requires bitsandbytes and CUDA)
     quant = parser.add_argument_group("quantization (requires bitsandbytes and CUDA)")
     quant.add_argument(
         "--load-in-8bit",
