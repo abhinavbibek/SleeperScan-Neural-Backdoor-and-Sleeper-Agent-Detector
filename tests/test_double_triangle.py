@@ -14,11 +14,20 @@ import sleeperscan
 
 def test_top_level_import() -> None:
     """all public classes should be importable directly from the sleeperscan package."""
-    from sleeperscan import AttentionHookManager, EntropyMonitor, DoubleTriangleDetector, SemanticDriftDetector
+    from sleeperscan import (
+        AttentionHookManager,
+        EntropyMonitor,
+        DoubleTriangleDetector,
+        SemanticDriftEvaluator,
+        TargetInverter,
+        MemoryExtractor,
+    )
     assert AttentionHookManager is not None
     assert EntropyMonitor is not None
     assert DoubleTriangleDetector is not None
-    assert SemanticDriftDetector is not None
+    assert SemanticDriftEvaluator is not None
+    assert TargetInverter is not None
+    assert MemoryExtractor is not None
     assert hasattr(sleeperscan, "__version__")
 
 
