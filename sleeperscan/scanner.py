@@ -367,8 +367,8 @@ def run_audit(args: argparse.Namespace) -> Dict[str, Any]:
     model, tokenizer = _load_model(
         model_path=args.model_path,
         lora_path=getattr(args, "lora_path", None),
-        load_in_8bit=False,
-        load_in_4bit=False,
+        load_in_8bit=getattr(args, "load_in_8bit", False),
+        load_in_4bit=getattr(args, "load_in_4bit", False),
     )
 
     candidates = [c.strip() for c in args.candidates.split(",") if c.strip()]
@@ -570,6 +570,21 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     # quantization
+    quant = parser.add_argument_group("quantization (requires bitsandbytes and CUDA)")
+    quant.add_argument(
+        "--load-in-8bit",
+        action="store_true",
+        default=False,
+        help="load model in 8-bit precision (recommended for CI/CD runners with ≤24 GB VRAM)",
+    )
+    quant.add_argument(
+        "--load-in-4bit",
+        action="store_true",
+        default=False,
+        help="load model in 4-bit NF4 precision (smallest VRAM footprint)",
+    )
+
+    # quantization (requires bitsandbytes and CUDA)
     quant = parser.add_argument_group("quantization (requires bitsandbytes and CUDA)")
     quant.add_argument(
         "--load-in-8bit",
