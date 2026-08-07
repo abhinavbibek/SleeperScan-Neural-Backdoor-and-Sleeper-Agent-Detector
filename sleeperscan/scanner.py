@@ -64,9 +64,7 @@ from sleeperscan.heuristics.double_triangle import DoubleTriangleDetector
 from sleeperscan.heuristics.semantic_drift import SemanticDriftEvaluator
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # helpers
-# ──────────────────────────────────────────────────────────────────────────────
 
 def _load_model(
     model_path: str,
@@ -177,9 +175,7 @@ def _get_trigger_token_indices(
     return prompt_indices, trigger_indices
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # pipeline stages
-# ──────────────────────────────────────────────────────────────────────────────
 
 def run_stage1_bait(
     model: Any,
@@ -348,9 +344,7 @@ def run_stage3_semad(
     return bool(result["is_semantically_warped"]), result
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # entry point
-# ──────────────────────────────────────────────────────────────────────────────
 
 def run_audit(args: argparse.Namespace) -> Dict[str, Any]:
     """executes the full sleeperscan pipeline and returns a structured report.
@@ -404,7 +398,7 @@ def run_audit(args: argparse.Namespace) -> Dict[str, Any]:
         },
     }
 
-    # ── stage 1: bait ──────────────────────────────────────────────────────────
+    # stage 1: bait
     proceed, stage1 = run_stage1_bait(
         model=model,
         tokenizer=tokenizer,
@@ -421,7 +415,7 @@ def run_audit(args: argparse.Namespace) -> Dict[str, Any]:
 
     top_trigger = stage1["top_candidate"]["trigger"]
 
-    # ── stage 2: double triangle ───────────────────────────────────────────────
+    # stage 2: double triangle
     proceed, stage2 = run_stage2_double_triangle(
         model=model,
         tokenizer=tokenizer,
@@ -435,7 +429,7 @@ def run_audit(args: argparse.Namespace) -> Dict[str, Any]:
     if not proceed:
         return report
 
-    # ── stage 3: semad ─────────────────────────────────────────────────────────
+    # stage 3: semad
     confirmed, stage3 = run_stage3_semad(
         model=model,
         tokenizer=tokenizer,

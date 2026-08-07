@@ -19,9 +19,7 @@ import torch.nn as nn
 from sleeperscan.heuristics.semantic_drift import SemanticDriftEvaluator
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # minimal model stubs
-# ──────────────────────────────────────────────────────────────────────────────
 
 class _HiddenStateOutput:
     """mimics the hidden_states attribute of HuggingFace CausalLMOutput."""
@@ -89,9 +87,7 @@ class _FakeTokenizer:
         return {"input_ids": ids}
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # fixtures
-# ──────────────────────────────────────────────────────────────────────────────
 
 @pytest.fixture
 def clean_model() -> _LinearProbeModel:
@@ -114,9 +110,7 @@ def tokenizer() -> _FakeTokenizer:
     return _FakeTokenizer()
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # tests: compute_jacobian_sensitivity
-# ──────────────────────────────────────────────────────────────────────────────
 
 class TestComputeJacobianSensitivity:
 
@@ -171,9 +165,7 @@ class TestComputeJacobianSensitivity:
         )
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # tests: evaluate_semantic_neighborhood
-# ──────────────────────────────────────────────────────────────────────────────
 
 class TestEvaluateSemanticNeighborhood:
 

@@ -27,9 +27,7 @@ import torch.nn as nn
 from sleeperscan.core.bait_inverter import TargetInverter
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # minimal model stubs for analytic testing
-# ──────────────────────────────────────────────────────────────────────────────
 
 class _FixedLogitOutput:
     """mimics CausalLMOutputWithPast with a scalar loss attribute."""
@@ -119,18 +117,14 @@ class _FakeTokenizer:
         return {"input_ids": ids}
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # fixtures
-# ──────────────────────────────────────────────────────────────────────────────
 
 @pytest.fixture
 def tokenizer() -> _FakeTokenizer:
     return _FakeTokenizer()
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # tests: compute_target_likelihood
-# ──────────────────────────────────────────────────────────────────────────────
 
 class TestComputeTargetLikelihood:
 
@@ -229,9 +223,7 @@ class TestComputeTargetLikelihood:
         assert res_high["is_match"] is False, "should not match at very high threshold"
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # tests: scan_candidates
-# ──────────────────────────────────────────────────────────────────────────────
 
 class TestScanCandidates:
 
