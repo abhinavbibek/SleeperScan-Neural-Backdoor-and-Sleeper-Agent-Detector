@@ -102,7 +102,10 @@ class SemanticDriftEvaluator:
 
         # BatchEncoding from transformers has a .to() method; plain dicts do not.
         # handle both cases for compatibility with test stubs and real tokenizers.
-        input_ids = tokenizer_output.to(self._device)["input_ids"]
+        if hasattr(tokenizer_output, "to"):
+            input_ids = tokenizer_output.to(self._device)["input_ids"]
+        else:
+            input_ids = tokenizer_output["input_ids"].to(self._device)
 
         embed_layer = self.model.get_input_embeddings()
 
